@@ -8,7 +8,6 @@ package device
 import (
 	"container/list"
 	"errors"
-	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -159,9 +158,6 @@ func xorPacketHeaderFooter16(packet []byte) {
 	if len(packet) < 32 {
 		return
 	}
-	fmt.Println("start xor")
-	fmt.Println("origin footer:", packet[len(packet)-16:])
-	fmt.Println("origin header:", packet[:16])
 	start := packet[:16]
 	end := packet[len(packet)-16:]
 	for i := 0; i < 16; i++ {
@@ -170,7 +166,6 @@ func xorPacketHeaderFooter16(packet []byte) {
 		// }
 		start[i] ^= end[i]
 	}
-	fmt.Println("after xor:", packet[:16])
 }
 
 func (peer *Peer) String() string {
