@@ -15,7 +15,6 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/sagernet/sing/common"
 	"github.com/sagernet/sing/common/control"
 	E "github.com/sagernet/sing/common/exceptions"
 	M "github.com/sagernet/sing/common/metadata"
@@ -462,7 +461,7 @@ func (bind *WinRingBind) receiveIPv4(bufs [][]byte, sizes []int, eps []Endpoint)
 	defer bind.mu.RUnlock()
 	n, ep, err := bind.v4.Receive(bufs[0], &bind.isOpen)
 	if n > 3 {
-		common.ClearArray(bufs[0][1:4])
+		// common.ClearArray(bufs[0][1:4])
 	}
 	sizes[0] = n
 	eps[0] = ep
@@ -474,7 +473,7 @@ func (bind *WinRingBind) receiveIPv6(bufs [][]byte, sizes []int, eps []Endpoint)
 	defer bind.mu.RUnlock()
 	n, ep, err := bind.v6.Receive(bufs[0], &bind.isOpen)
 	if n > 3 {
-		common.ClearArray(bufs[0][1:4])
+		// common.ClearArray(bufs[0][1:4])
 	}
 	sizes[0] = n
 	eps[0] = ep
@@ -545,7 +544,7 @@ func (bind *WinRingBind) Send(bufs [][]byte, endpoint Endpoint, offset int) erro
 		if len(buf) > 3 {
 			reserved, loaded := bind.reservedForEndpoint[*endpoint.(*WinRingEndpoint)]
 			if loaded {
-				copy(buf[1:4], reserved[:])
+				// copy(buf[1:4], reserved[:])
 			}
 		}
 		switch nend.family {

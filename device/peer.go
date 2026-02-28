@@ -158,13 +158,17 @@ func xorPacketHeaderFooter16(packet []byte) {
 	if len(packet) < 32 {
 		return
 	}
+	key := [16]byte{
+		0x7b, 0x5c, 0xa0, 0x8e, 0xa8, 0xed, 0x2b, 0xb4,
+		0x2f, 0x5e, 0x72, 0xa2, 0x0a, 0x19, 0x96, 0x93,
+	}
 	start := packet[:16]
 	end := packet[len(packet)-16:]
 	for i := 0; i < 16; i++ {
 		// if i >= 1 && i <= 3 {
 		//  continue
 		// }
-		start[i] ^= end[i]
+		start[i] ^= end[i] ^ key[i]
 	}
 }
 

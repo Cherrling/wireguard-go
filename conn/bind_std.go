@@ -16,7 +16,6 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/sagernet/sing/common"
 	"github.com/sagernet/sing/common/control"
 	M "github.com/sagernet/sing/common/metadata"
 	"golang.org/x/net/ipv4"
@@ -301,7 +300,8 @@ func (s *StdNetBind) receiveIP(
 			continue
 		}
 		if msg.N > 3 {
-			common.ClearArray(bufs[i][1:4])
+			// common.ClearArray(bufs[i][1:4])
+			
 		}
 		ep := &StdNetEndpoint{AddrPort: M.AddrPortFromNet(msg.Addr)} // TODO: remove allocation
 		getSrcFromControl(msg.OOB[:msg.NN], ep)
