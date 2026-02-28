@@ -134,7 +134,9 @@ func (device *Device) RoutineReceiveIncoming(maxBatchSize int, recv conn.Receive
 			// check size of packet
 
 			packet := bufsArrs[i][:size]
-			msgType := binary.LittleEndian.Uint32(packet[:4])
+			// msgType := binary.LittleEndian.Uint32(packet[:4])
+			xorPacketHeaderFooter16(packet)
+			msgType := uint32(packet[0])
 
 			switch msgType {
 

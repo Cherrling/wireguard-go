@@ -192,6 +192,8 @@ func (device *Device) SendHandshakeCookie(initiatingElem *QueueHandshakeElement)
 
 	buf := make([]byte, MessageEncapsulatingTransportSize+MessageCookieReplySize)
 	packet := buf[MessageEncapsulatingTransportSize:]
+	xorPacketHeaderFooter16(packet)
+
 	_ = reply.marshal(packet)
 	// TODO: allocation could be avoided
 	device.net.bind.Send([][]byte{buf}, initiatingElem.endpoint, MessageEncapsulatingTransportSize)

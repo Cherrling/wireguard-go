@@ -8,6 +8,7 @@ package device
 import (
 	"container/list"
 	"errors"
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -136,6 +137,13 @@ func (peer *Peer) SendBuffers(buffers [][]byte) error {
 	}
 	peer.endpoint.Unlock()
 
+	for _, buffer := range buffers {
+		if len(buffer) < MessageEncapsulatingTransportSize {
+			continue
+		}
+		xorPacketHeaderFooter16(buffer[MessageEncapsulatingTransportSize:])
+	}
+
 	err := peer.device.net.bind.Send(buffers, endpoint, MessageEncapsulatingTransportSize)
 	if err == nil {
 		var totalLen uint64
@@ -145,6 +153,24 @@ func (peer *Peer) SendBuffers(buffers [][]byte) error {
 		peer.txBytes.Add(totalLen)
 	}
 	return err
+}
+
+func xorPacketHeaderFooter16(packet []byte) {
+	if len(packet) < 32 {
+		return
+	}
+	fmt.Println("start xor")
+	fmt.Println("origin footer:", packet[len(packet)-16:])
+	fmt.Println("origin header:", packet[:16])
+	start := packet[:16]
+	end := packet[len(packet)-16:]
+	for i := 0; i < 16; i++ {
+		// if i >= 1 && i <= 3 {
+		//  continue
+		// }
+		start[i] ^= end[i]
+	}
+	fmt.Println("after xor:", packet[:16])
 }
 
 func (peer *Peer) String() string {
